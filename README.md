@@ -338,6 +338,37 @@ docker run -d \
 - **网络隔离**：前后端通过 Docker 网络通信，前端通过 nginx 代理后端 API
 - **环境变量**：所有配置通过环境变量传递，便于不同环境部署
 
+<details>
+  <summary>📒Windows用户</summary>
+
+
+如果你使用 Windows, 请先安装 Windows Docker Desktop，然后按以下步骤操作：
+
+1. **确保 Docker Desktop 已启动**
+   - 检查系统托盘中的 Docker 图标，确保 Docker 正在运行
+
+2. **创建环境变量文件**
+   
+   ```cmd
+   cp env.example .env
+   ```
+
+3. **编辑 `.env` 文件**，填入你的 `GOOGLE_API_KEY` 等配置
+
+4. **启动服务**
+   ```powershell
+   docker-compose up -d
+   ```
+   命令与 Linux/Mac 相同，Docker Compose 会自动处理 Windows 路径。
+
+5. **访问应用**
+   - 前端：http://localhost:3000
+   - 后端：http://localhost:5000
+
+> **提示**：如果遇到问题，确保在 Docker Desktop 设置中启用了 WSL 2 后端（推荐），并确保端口 3000 和 5000 未被占用。
+
+</details>
+
 ### 生产环境建议
 
 1. **使用 Gunicorn**：在生产环境中，建议使用 Gunicorn 替代 Flask 开发服务器
