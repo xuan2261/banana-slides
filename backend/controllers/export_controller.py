@@ -2,7 +2,7 @@
 Export Controller - handles file export endpoints
 """
 from flask import Blueprint, request, current_app
-from models import db, Project, Page
+from models import db, Project, Page, Task
 from utils import error_response, not_found, bad_request, success_response
 from services import ExportService, FileService
 from services.ai_service_manager import get_ai_service
@@ -155,18 +155,22 @@ def export_pdf(project_id):
 @export_bp.route('/<project_id>/export/editable-pptx', methods=['POST'])
 def export_editable_pptx(project_id):
     """
-    POST /api/projects/{project_id}/export/editable-pptx - Export Editable PPTX (Async)
+    POST /api/projects/{project_id}/export/editable-pptx - 导出可编辑PPTX（异步）
+    
+    使用递归分析方法（支持任意尺寸、递归子图分析）
     
     这个端点创建一个异步任务来执行以下操作：
-    1. 收集所有页面图片
-    2. 并行生成干净背景（移除文字和图标）
-    3. 转换为 PDF
-    4. 发送到 MinerU 解析
-    5. 从 MinerU 结果创建可编辑 PPTX
+    1. 递归分析图片（支持任意尺寸和分辨率）
+    2. 转换为PDF并上传MinerU识别
+    3. 提取元素bbox和生成clean background（inpainting）
+    4. 递归处理图片/图表中的子元素
+    5. 创建可编辑PPTX
     
     Request body (JSON):
         {
-            "filename": "optional_custom_name.pptx"
+            "filename": "optional_custom_name.pptx",
+            "max_depth": 1,      // 可选，递归深度（默认1=不递归，2=递归一层）
+            "max_workers": 4     // 可选，并发数（默认4）
         }
     
     Returns:
@@ -174,7 +178,10 @@ def export_editable_pptx(project_id):
         {
             "success": true,
             "data": {
-                "task_id": "uuid-here"
+                "task_id": "uuid-here",
+                "method": "recursive_analysis",
+                "max_depth": 2,
+                "max_workers": 4
             },
             "message": "Export task created"
         }
@@ -208,8 +215,20 @@ def export_editable_pptx(project_id):
         if not filename.endswith('.pptx'):
             filename += '.pptx'
         
+        # 递归分析参数
+        # max_depth 语义：1=只处理表层不递归，2=递归一层（处理图片/图表中的子元素）
+        max_depth = data.get('max_depth', 1)  # 默认不递归，与测试脚本一致
+        max_workers = data.get('max_workers', 4)
+        
+        # Validate parameters
+        # max_depth >= 1: 至少处理表层元素
+        if not isinstance(max_depth, int) or max_depth < 1 or max_depth > 5:
+            return bad_request("max_depth must be an integer between 1 and 5")
+        
+        if not isinstance(max_workers, int) or max_workers < 1 or max_workers > 16:
+            return bad_request("max_workers must be an integer between 1 and 16")
+        
         # Create task record
-        from models import Task
         task = Task(
             project_id=project_id,
             task_type='EXPORT_EDITABLE_PPTX',
@@ -218,44 +237,39 @@ def export_editable_pptx(project_id):
         db.session.add(task)
         db.session.commit()
         
-        logger.info(f"Created export task {task.id} for project {project_id}")
+        logger.info(f"Created export task {task.id} for project {project_id} (recursive analysis: depth={max_depth}, workers={max_workers})")
         
         # Get services
         from services.file_service import FileService
-        from services.task_manager import task_manager, export_editable_pptx_task
+        from services.task_manager import task_manager, export_editable_pptx_with_recursive_analysis_task
         
         file_service = FileService(current_app.config['UPLOAD_FOLDER'])
-        ai_service = get_ai_service()
-        
-        # Get configuration
-        aspect_ratio = current_app.config.get('DEFAULT_ASPECT_RATIO', '16:9')
-        resolution = current_app.config.get('DEFAULT_RESOLUTION', '2K')
-        max_workers = min(8, current_app.config.get('MAX_IMAGE_WORKERS', 8))
         
         # Get Flask app instance for background task
         app = current_app._get_current_object()
         
-        # Submit background task
+        # 使用递归分析任务（不需要 ai_service，使用 ImageEditabilityService）
         task_manager.submit_task(
             task.id,
-            export_editable_pptx_task,
+            export_editable_pptx_with_recursive_analysis_task,
             project_id=project_id,
             filename=filename,
-            ai_service=ai_service,
             file_service=file_service,
-            aspect_ratio=aspect_ratio,
-            resolution=resolution,
+            max_depth=max_depth,
             max_workers=max_workers,
             app=app
         )
         
-        logger.info(f"Submitted export task {task.id} to task manager")
+        logger.info(f"Submitted recursive export task {task.id} to task manager")
         
         return success_response(
             data={
-                "task_id": task.id
+                "task_id": task.id,
+                "method": "recursive_analysis",
+                "max_depth": max_depth,
+                "max_workers": max_workers
             },
-            message="Export task created"
+            message="Export task created (using recursive analysis)"
         )
     
     except Exception as e:
@@ -263,4 +277,3 @@ def export_editable_pptx(project_id):
         logger = logging.getLogger(__name__)
         logger.exception("Error creating export task")
         return error_response('SERVER_ERROR', str(e), 500)
-

@@ -431,8 +431,7 @@ export const exportPDF = async (
 };
 
 /**
- * 导出为可编辑PPTX（异步）
- * 返回任务ID，需要通过getTaskStatus轮询获取进度和下载链接
+ * 导出为可编辑PPTX（异步任务）
  */
 export const exportEditablePPTX = async (
   projectId: string,
@@ -771,7 +770,7 @@ export const getDefaultOutputLanguage = async (): Promise<ApiResponse<{ language
 export const getStoredOutputLanguage = async (): Promise<OutputLanguage> => {
   try {
     const response = await apiClient.get<ApiResponse<{ language: OutputLanguage }>>('/api/output-language');
-    return response.data.data.language;
+    return response.data.data?.language || 'zh';
   } catch (error) {
     console.warn('Failed to load output language from settings, using default', error);
     return 'zh';
