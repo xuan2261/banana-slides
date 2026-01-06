@@ -247,6 +247,13 @@
       "idea": "Ý tưởng PPT:",
       "outline": "Dàn ý:",
       "description": "Mô tả:"
+    },
+    "card": {
+      "page": "Trang {{index}}",
+      "titlePlaceholder": "Tiêu đề",
+      "pointsPlaceholder": "Điểm chính (mỗi dòng một điểm)",
+      "confirmDelete": "Bạn có chắc muốn xóa trang này?",
+      "confirmDeleteTitle": "Xác nhận xóa"
     }
   },
   "detail": {
@@ -290,7 +297,13 @@
     "confirmDeleteBatch": "Bạn có chắc muốn xóa {{count}} dự án đã chọn? Hành động này không thể hoàn tác.",
     "emptyTitleError": "Tên dự án không được để trống",
     "updateTitleSuccess": "Đã cập nhật tên dự án",
-    "updateTitleError": "Không thể cập nhật tên dự án"
+    "updateTitleError": "Không thể cập nhật tên dự án",
+    "projectCard": {
+      "clickToEdit": "Nhấn để sửa tên",
+      "pageCount": "{{count}} trang",
+      "firstPagePreview": "Xem trước trang đầu",
+      "deleteProject": "Xóa dự án"
+    }
   },
   "preview": {
     "title": "Xem trước",
@@ -375,6 +388,19 @@
       "loadTemplateFailed": "Không thể tải mẫu",
       "templateChanged": "Đổi mẫu thành công",
       "changeTemplateFailed": "Không thể đổi mẫu: {{error}}"
+    },
+    "descriptionCard": {
+      "page": "Trang {{index}}",
+      "generating": "Đang tạo mô tả...",
+      "noDescription": "Chưa tạo mô tả",
+      "generatingButton": "Đang tạo...",
+      "editTitle": "Chỉnh sửa mô tả trang",
+      "contentLabel": "Nội dung mô tả"
+    },
+    "slideCard": {
+      "notGenerated": "Chưa tạo",
+      "confirmDelete": "Bạn có chắc muốn xóa trang này?",
+      "confirmDeleteTitle": "Xác nhận xóa"
     }
   },
   "components": {

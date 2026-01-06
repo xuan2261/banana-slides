@@ -247,6 +247,13 @@
       "idea": "PPT Idea:",
       "outline": "Outline:",
       "description": "Description:"
+    },
+    "card": {
+      "page": "Page {{index}}",
+      "titlePlaceholder": "Title",
+      "pointsPlaceholder": "Key points (one per line)",
+      "confirmDelete": "Are you sure you want to delete this page?",
+      "confirmDeleteTitle": "Confirm Delete"
     }
   },
   "detail": {
@@ -290,7 +297,13 @@
     "confirmDeleteBatch": "Are you sure you want to delete {{count}} selected project(s)? This action cannot be undone.",
     "emptyTitleError": "Project name cannot be empty",
     "updateTitleSuccess": "Project name updated",
-    "updateTitleError": "Failed to update project name"
+    "updateTitleError": "Failed to update project name",
+    "projectCard": {
+      "clickToEdit": "Click to edit name",
+      "pageCount": "{{count}} pages",
+      "firstPagePreview": "First page preview",
+      "deleteProject": "Delete project"
+    }
   },
   "preview": {
     "title": "Preview",
@@ -375,6 +388,19 @@
       "loadTemplateFailed": "Failed to load template",
       "templateChanged": "Template changed successfully",
       "changeTemplateFailed": "Failed to change template: {{error}}"
+    },
+    "descriptionCard": {
+      "page": "Page {{index}}",
+      "generating": "Generating description...",
+      "noDescription": "No description yet",
+      "generatingButton": "Generating...",
+      "editTitle": "Edit Page Description",
+      "contentLabel": "Description Content"
+    },
+    "slideCard": {
+      "notGenerated": "Not generated",
+      "confirmDelete": "Are you sure you want to delete this page?",
+      "confirmDeleteTitle": "Confirm Delete"
     }
   },
   "components": {

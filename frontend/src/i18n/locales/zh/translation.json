@@ -247,6 +247,13 @@
       "idea": "PPT构想:",
       "outline": "大纲:",
       "description": "描述:"
+    },
+    "card": {
+      "page": "第 {{index}} 页",
+      "titlePlaceholder": "标题",
+      "pointsPlaceholder": "要点（每行一个）",
+      "confirmDelete": "确定要删除这一页吗？",
+      "confirmDeleteTitle": "确认删除"
     }
   },
   "detail": {
@@ -290,7 +297,13 @@
     "confirmDeleteBatch": "确定要删除选中的 {{count}} 个项目吗？此操作不可恢复。",
     "emptyTitleError": "项目名称不能为空",
     "updateTitleSuccess": "项目名称已更新",
-    "updateTitleError": "更新项目名称失败"
+    "updateTitleError": "更新项目名称失败",
+    "projectCard": {
+      "clickToEdit": "点击编辑名称",
+      "pageCount": "{{count}} 页",
+      "firstPagePreview": "第一页预览",
+      "deleteProject": "删除项目"
+    }
   },
   "preview": {
     "title": "预览",
@@ -375,6 +388,19 @@
       "loadTemplateFailed": "加载模板失败",
       "templateChanged": "模板更换成功",
       "changeTemplateFailed": "更换模板失败: {{error}}"
+    },
+    "descriptionCard": {
+      "page": "第 {{index}} 页",
+      "generating": "正在生成描述...",
+      "noDescription": "尚未生成描述",
+      "generatingButton": "生成中...",
+      "editTitle": "编辑页面描述",
+      "contentLabel": "描述内容"
+    },
+    "slideCard": {
+      "notGenerated": "未生成",
+      "confirmDelete": "确定要删除这一页吗？",
+      "confirmDeleteTitle": "确认删除"
     }
   },
   "components": {
