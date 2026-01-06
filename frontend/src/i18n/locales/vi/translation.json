@@ -443,99 +443,99 @@
       "submitShortcut": "Gửi (Ctrl+Enter)"
     },
     "export": {
-      "title": "Tac vu xuat",
-      "inProgress": "{{count}} dang chay",
+      "title": "Tác vụ xuất",
+      "inProgress": "{{count}} đang chạy",
       "taskType": {
         "pptx": "PPTX",
         "pdf": "PDF",
-        "editablePptx": "PPTX chinh sua duoc"
+        "editablePptx": "PPTX chỉnh sửa được"
       },
       "pageRange": {
-        "all": "Tat ca",
+        "all": "Tất cả",
         "single": "Trang {{page}}",
         "range": "Trang {{start}}-{{end}}",
         "count": "{{count}} trang"
       },
-      "preparing": "Dang chuan bi...",
-      "waiting": "Dang cho...",
-      "history": "Lich su",
-      "clear": "Xoa",
-      "download": "Tai xuong",
-      "remove": "Xoa",
-      "warningsCount": "{{count}} canh bao",
-      "clickToView": "Nhan de xem",
+      "preparing": "Đang chuẩn bị...",
+      "waiting": "Đang chờ...",
+      "history": "Lịch sử",
+      "clear": "Xóa",
+      "download": "Tải xuống",
+      "remove": "Xóa",
+      "warningsCount": "{{count}} cảnh báo",
+      "clickToView": "Nhấn để xem",
       "warnings": {
-        "title": "Canh bao xuat ({{count}})",
-        "details": "Chi tiet",
-        "styleExtractionFailed": "Trich xuat kieu that bai ({{count}})",
-        "textRenderFailed": "Render van ban that bai ({{count}})",
-        "moreItems": "... con {{count}} muc",
-        "close": "Dong"
+        "title": "Cảnh báo xuất ({{count}})",
+        "details": "Chi tiết",
+        "styleExtractionFailed": "Trích xuất kiểu thất bại ({{count}})",
+        "textRenderFailed": "Render văn bản thất bại ({{count}})",
+        "moreItems": "... còn {{count}} mục",
+        "close": "Đóng"
       }
     },
     "material": {
-      "title": "Chon tai lieu",
-      "count": "Tong {{count}} tai lieu",
-      "noMaterials": "Chua co tai lieu",
-      "selected": "Da chon {{count}}",
+      "title": "Chọn tài liệu",
+      "count": "Tổng {{count}} tài liệu",
+      "noMaterials": "Chưa có tài liệu",
+      "selected": "Đã chọn {{count}}",
       "filter": {
-        "all": "Tat ca tai lieu",
-        "unassociated": "Khong lien ket",
-        "currentProject": "Du an hien tai",
-        "showMore": "+ Xem them du an...",
-        "project": "Du an"
+        "all": "Tất cả tài liệu",
+        "unassociated": "Không liên kết",
+        "currentProject": "Dự án hiện tại",
+        "showMore": "+ Xem thêm dự án...",
+        "project": "Dự án"
       },
       "actions": {
-        "refresh": "Lam moi",
-        "upload": "Tai len",
-        "uploading": "Dang tai...",
-        "generate": "Tao tai lieu",
-        "clearSelection": "Xoa chon",
-        "deleteMaterial": "Xoa tai lieu"
+        "refresh": "Làm mới",
+        "upload": "Tải lên",
+        "uploading": "Đang tải...",
+        "generate": "Tạo tài liệu",
+        "clearSelection": "Xóa chọn",
+        "deleteMaterial": "Xóa tài liệu"
       },
       "empty": {
-        "loading": "Dang tai...",
-        "noMaterials": "Chua co tai lieu",
-        "uploadOrGenerate": "Ban co the tai anh len hoac dung trinh tao tai lieu",
-        "uploadHint": "Ban co the tai anh len lam tai lieu"
+        "loading": "Đang tải...",
+        "noMaterials": "Chưa có tài liệu",
+        "uploadOrGenerate": "Bạn có thể tải ảnh lên hoặc dùng trình tạo tài liệu",
+        "uploadHint": "Bạn có thể tải ảnh lên làm tài liệu"
       },
-      "saveToLibrary": "Dong thoi luu vao thu vien mau",
-      "cancel": "Huy",
-      "confirm": "Xac nhan chon ({{count}})",
+      "saveToLibrary": "Đồng thời lưu vào thư viện mẫu",
+      "cancel": "Hủy",
+      "confirm": "Xác nhận chọn ({{count}})",
       "error": {
-        "loadFailed": "Khong the tai danh sach tai lieu",
-        "maxSelection": "Toi da chon {{count}} tai lieu",
-        "selectAtLeastOne": "Vui long chon it nhat mot tai lieu",
-        "uploadFailed": "Tai tai lieu that bai",
-        "unsupportedFormat": "Dinh dang anh khong ho tro",
-        "deleteFailed": "Khong the xoa tai lieu",
-        "missingId": "Khong the xoa: Thieu ID tai lieu"
+        "loadFailed": "Không thể tải danh sách tài liệu",
+        "maxSelection": "Tối đa chọn {{count}} tài liệu",
+        "selectAtLeastOne": "Vui lòng chọn ít nhất một tài liệu",
+        "uploadFailed": "Tải tài liệu thất bại",
+        "unsupportedFormat": "Định dạng ảnh không hỗ trợ",
+        "deleteFailed": "Không thể xóa tài liệu",
+        "missingId": "Không thể xóa: Thiếu ID tài liệu"
       },
       "toast": {
-        "uploadSuccess": "Tai tai lieu thanh cong",
-        "deleteSuccess": "Da xoa tai lieu"
+        "uploadSuccess": "Tải tài liệu thành công",
+        "deleteSuccess": "Đã xóa tài liệu"
       }
     },
     "template": {
-      "myTemplates": "Mau cua toi",
-      "presets": "Mau co san",
-      "selected": "Da chon",
-      "upload": "Tai len mau",
-      "saveToLibrary": "Luu mau tai len vao thu vien",
-      "fromMaterial": "Chon tu tai lieu",
-      "fromMaterialButton": "Chon tu thu vien tai lieu lam mau",
-      "deleteTemplate": "Xoa mau",
+      "myTemplates": "Mẫu của tôi",
+      "presets": "Mẫu có sẵn",
+      "selected": "Đã chọn",
+      "upload": "Tải lên mẫu",
+      "saveToLibrary": "Lưu mẫu tải lên vào thư viện",
+      "fromMaterial": "Chọn từ tài liệu",
+      "fromMaterialButton": "Chọn từ thư viện tài liệu làm mẫu",
+      "deleteTemplate": "Xóa mẫu",
       "toast": {
-        "uploadSuccess": "Tai mau thanh cong",
-        "uploadFailed": "Tai mau that bai",
-        "savedToLibrary": "Da luu mau vao thu vien",
-        "materialSavedToLibrary": "Da luu tai lieu vao thu vien mau",
-        "selectedFromMaterial": "Da chon tu thu vien tai lieu lam mau",
-        "loadMaterialFailed": "Khong the tai tai lieu",
-        "deleteSuccess": "Da xoa mau",
-        "deleteFailed": "Khong the xoa mau",
-        "cannotDeleteActive": "Khong the xoa mau dang dung, vui long bo chon hoac chuyen truoc",
-        "unknownError": "Loi khong xac dinh"
+        "uploadSuccess": "Tải mẫu thành công",
+        "uploadFailed": "Tải mẫu thất bại",
+        "savedToLibrary": "Đã lưu mẫu vào thư viện",
+        "materialSavedToLibrary": "Đã lưu tài liệu vào thư viện mẫu",
+        "selectedFromMaterial": "Đã chọn từ thư viện tài liệu làm mẫu",
+        "loadMaterialFailed": "Không thể tải tài liệu",
+        "deleteSuccess": "Đã xóa mẫu",
+        "deleteFailed": "Không thể xóa mẫu",
+        "cannotDeleteActive": "Không thể xóa mẫu đang dùng, vui lòng bỏ chọn hoặc chuyển trước",
+        "unknownError": "Lỗi không xác định"
       }
     },
     "projectSettings": {

@@ -22,5 +22,4 @@ export { ImagePreviewList } from './ImagePreviewList';
 export { ProjectResourcesList } from './ProjectResourcesList';
 export { ProjectSettingsModal } from './ProjectSettingsModal';
 export { ExportTasksPanel } from './ExportTasksPanel';
-
-
+export { LanguageSwitcher } from './LanguageSwitcher';
