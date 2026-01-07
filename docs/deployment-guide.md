@@ -1,15 +1,138 @@
 # Deployment Guide - Banana Slides
 
-This guide covers deploying Banana Slides to Render.com (recommended for simplicity).
+This guide covers deploying Banana Slides to various platforms.
 
-## Quick Deploy with Render Blueprint
+## Table of Contents
+- [Quick Comparison](#quick-comparison)
+- [Fly.io Deployment](#flyio-deployment-recommended-for-performance)
+- [Render.com Deployment](#rendercom-deployment-simplest)
+- [Environment Variables Reference](#environment-variables-reference)
+- [Troubleshooting](#troubleshooting)
+
+---
+
+## Quick Comparison
+
+| Platform | Cold Start | Setup Time | Credit Card | Best For |
+|----------|------------|------------|-------------|----------|
+| **Fly.io** | None | ~15 min | Required (verify only) | Production |
+| **Render** | ~50s | ~5 min | Not required | Testing/Demo |
+
+---
+
+## Fly.io Deployment (Recommended for Performance)
+
+### Prerequisites
+- GitHub account with repo access
+- Fly.io account (credit card required for verification, still free)
+- Google API Key for Gemini (paid tier for image generation)
+
+### Step 1: Install Fly CLI
+
+**Windows (PowerShell):**
+```powershell
+powershell -Command "iwr https://fly.io/install.ps1 -useb | iex"
+```
+
+**macOS/Linux:**
+```bash
+curl -L https://fly.io/install.sh | sh
+```
+
+### Step 2: Login to Fly.io
+```bash
+fly auth login
+```
+
+### Step 3: Deploy Backend
+
+```bash
+# Navigate to project root
+cd banana-slides
+
+# Launch backend app (first time only)
+fly launch --config backend/fly.toml --no-deploy --name banana-slides-api
+
+# Create persistent volume for SQLite database
+fly volumes create banana_data --size 1 --region sin --app banana-slides-api
+
+# Set secrets (REQUIRED)
+fly secrets set GOOGLE_API_KEY=your-gemini-api-key --app banana-slides-api
+
+# Optional: Set additional secrets
+fly secrets set BAIDU_OCR_API_KEY=your-baidu-key --app banana-slides-api
+
+# Deploy backend
+fly deploy --config backend/fly.toml --app banana-slides-api
+```
+
+### Step 4: Deploy Frontend
+
+```bash
+# Update frontend fly.toml with your backend URL (already configured by default)
+# VITE_API_BASE_URL = "https://banana-slides-api.fly.dev"
+
+# Launch frontend app (first time only)
+fly launch --config frontend/fly.toml --no-deploy --name banana-slides-web
+
+# Deploy frontend
+fly deploy --config frontend/fly.toml --app banana-slides-web
+```
+
+### Step 5: Verify Deployment
+
+```bash
+# Check backend health
+curl https://banana-slides-api.fly.dev/health
+
+# Check app status
+fly status --app banana-slides-api
+fly status --app banana-slides-web
+```
+
+**URLs after deployment:**
+- Backend: `https://banana-slides-api.fly.dev`
+- Frontend: `https://banana-slides-web.fly.dev`
+
+### Step 6: View Logs
+
+```bash
+# Backend logs
+fly logs --app banana-slides-api
+
+# Frontend logs
+fly logs --app banana-slides-web
+```
+
+### Updating Deployment
+
+```bash
+# Pull latest code
+git pull origin main
+
+# Redeploy backend
+fly deploy --config backend/fly.toml --app banana-slides-api
+
+# Redeploy frontend
+fly deploy --config frontend/fly.toml --app banana-slides-web
+```
+
+### Fly.io Free Tier
+- 3 shared-cpu-1x VMs with 256MB RAM
+- 3GB persistent storage
+- 160GB outbound bandwidth/month
+- No cold starts (VMs stay running)
+
+---
+
+## Render.com Deployment (Simplest)
 
 ### Prerequisites
 - GitHub account with repo access
 - Render.com account (free tier available)
 - Google API Key for Gemini
 
-### One-Click Deploy
+### One-Click Deploy with Blueprint
 
 1. **Connect Repository**
    - Go to [render.com](https://render.com) → Dashboard
@@ -26,11 +149,9 @@ This guide covers deploying Banana Slides to Render.com (recommended for simplic
    - Backend: `https://banana-slides-backend.onrender.com/health`
    - Frontend: `https://banana-slides-frontend.onrender.com`
 
----
+### Manual Deployment Steps
 
-## Manual Deployment Steps
-
-### Backend Service
+#### Backend Service
 
 1. **Create Web Service**
    - "New" → "Web Service"
@@ -60,7 +181,7 @@ This guide covers deploying Banana Slides to Render.com (recommended for simplic
    - Mount Path: `/app/backend/instance`
    - Size: 1GB
 
-### Frontend Static Site
+#### Frontend Static Site
 
 1. **Create Static Site**
    - "New" → "Static Site"
@@ -81,6 +202,12 @@ This guide covers deploying Banana Slides to Render.com (recommended for simplic
 3. **Redirect Rules** (for SPA routing)
    - Add rewrite rule: `/*` → `/index.html`
 
+### Render Free Tier Limitations
+- Services spin down after 15 min inactivity
+- ~50 seconds cold start time
+- 750 hours/month (enough for 1 always-on service)
+- 100GB bandwidth/month
+
 ---
 
 ## Environment Variables Reference
@@ -96,6 +223,7 @@ This guide covers deploying Banana Slides to Render.com (recommended for simplic
 | `OUTPUT_LANGUAGE` | No | vi | Output language |
 | `PORT` | No | 5000 | Server port |
 | `CORS_ORIGINS` | No | * | Allowed CORS origins |
+| `BAIDU_OCR_API_KEY` | No | - | For editable PPTX export |
 
 ### Frontend
 
@@ -124,16 +252,20 @@ This guide covers deploying Banana Slides to Render.com (recommended for simplic
 ### Disk Storage
 - SQLite database stored at `/app/backend/instance`
 - Uploads stored at `/app/uploads`
-- Ensure disk is mounted correctly
+- Ensure disk/volume is mounted correctly
 
----
+### Fly.io Specific
+```bash
+# SSH into container for debugging
+fly ssh console --app banana-slides-api
 
-## Free Tier Limitations
+# Check volume mount
+fly volumes list --app banana-slides-api
 
-Render free tier has:
-- Services spin down after 15 min inactivity
-- ~50 seconds cold start time
-- 750 hours/month (enough for 1 always-on service)
-- 100GB bandwidth/month
+# Restart app
+fly apps restart banana-slides-api
+```
 
-For production, consider upgrading to Starter plan ($7/month).
+### Render Specific
+- Check Render dashboard for build logs
+- Verify disk is attached in Settings
