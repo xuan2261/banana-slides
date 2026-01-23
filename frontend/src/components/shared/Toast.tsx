@@ -38,9 +38,8 @@ export const Toast: React.FC<ToastProps> = ({
   return (
     <div
       className={cn(
-        'fixed top-4 right-4 z-50',
         'flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg',
-        'animate-in slide-in-from-right',
+        'animate-in slide-in-from-right transition-all duration-300',
         styles[type]
       )}
     >

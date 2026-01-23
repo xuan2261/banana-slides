@@ -166,7 +166,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                   }`}
                 >
                   <img
-                    src={getImageUrl(template.template_image_url)}
+                    src={getImageUrl(template.thumb_url || template.template_image_url)}
                     alt={template.name || 'Template'}
                     className="absolute inset-0 w-full h-full object-cover"
                   />
@@ -212,7 +212,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                 {template.preview ? (
                   <>
                     <img
-                      src={template.preview}
+                      src={template.thumb || template.preview}
                       alt={template.name}
                       className="absolute inset-0 w-full h-full object-cover"
                     />

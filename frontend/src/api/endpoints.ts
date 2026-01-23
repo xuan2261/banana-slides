@@ -581,6 +581,33 @@ export const deleteMaterial = async (materialId: string): Promise<ApiResponse<{ 
 };
 
 /**
+ * 批量下载素材（打包为zip）
+ * @param materialIds 素材ID列表
+ */
+export const downloadMaterialsZip = async (
+  materialIds: string[]
+): Promise<ApiResponse<{ download_url: string }>> => {
+  const response = await apiClient.post<Blob>(
+    '/api/materials/download',
+    { material_ids: materialIds },
+    { responseType: 'blob' }
+  );
+
+  // 直接触发下载
+  const blob = response.data;
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'materials.zip';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+
+  return { success: true, data: { download_url: '' } };
+};
+
+/**
  * 关联素材到项目（通过URL）
  * @param projectId 项目ID
  * @param materialUrls 素材URL列表
@@ -602,6 +629,7 @@ export interface UserTemplate {
   template_id: string;
   name?: string;
   template_image_url: string;
+  thumb_url?: string;  // Thumbnail URL for faster loading
   created_at?: string;
   updated_at?: string;
 }
@@ -814,9 +842,10 @@ export const getSettings = async (): Promise<ApiResponse<Settings>> => {
  * 更新系统设置
  */
 export const updateSettings = async (
-  data: Partial<Omit<Settings, 'id' | 'api_key_length' | 'mineru_token_length' | 'created_at' | 'updated_at'>> & { 
+  data: Partial<Omit<Settings, 'id' | 'api_key_length' | 'mineru_token_length' | 'baidu_ocr_api_key_length' | 'created_at' | 'updated_at'>> & { 
     api_key?: string;
     mineru_token?: string;
+    baidu_ocr_api_key?: string;
   }
 ): Promise<ApiResponse<Settings>> => {
   const response = await apiClient.put<ApiResponse<Settings>>('/api/settings', data);
@@ -828,5 +857,108 @@ export const updateSettings = async (
  */
 export const resetSettings = async (): Promise<ApiResponse<Settings>> => {
   const response = await apiClient.post<ApiResponse<Settings>>('/api/settings/reset');
+  return response.data;
+};
+
+/**
+ * 验证 API key 是否可用
+ */
+export const verifyApiKey = async (): Promise<ApiResponse<{ available: boolean; message: string }>> => {
+  const response = await apiClient.post<ApiResponse<{ available: boolean; message: string }>>('/api/settings/verify');
+  return response.data;
+};
+
+/**
+ * 可选的测试设置类型
+ */
+export interface TestSettingsOverride {
+  api_key?: string;
+  api_base_url?: string;
+  text_model?: string;
+  image_model?: string;
+  image_caption_model?: string;
+  mineru_api_base?: string;
+  mineru_token?: string;
+  baidu_ocr_api_key?: string;
+  ai_provider_format?: 'openai' | 'gemini';
+  image_resolution?: string;
+  enable_text_reasoning?: boolean;
+  text_thinking_budget?: number;
+  enable_image_reasoning?: boolean;
+  image_thinking_budget?: number;
+}
+
+/**
+ * 测试百度 OCR 服务（异步）
+ * @param settings 可选的设置覆盖（未保存的设置）
+ * @returns 返回任务ID，需要通过 getTestStatus 轮询结果
+ */
+export const testBaiduOcr = async (settings?: TestSettingsOverride): Promise<ApiResponse<{ task_id: string; status: string }>> => {
+  const response = await apiClient.post<ApiResponse<{ task_id: string; status: string }>>('/api/settings/tests/baidu-ocr', settings || {});
+  return response.data;
+};
+
+/**
+ * 测试文本生成模型（异步）
+ * @param settings 可选的设置覆盖（未保存的设置）
+ * @returns 返回任务ID，需要通过 getTestStatus 轮询结果
+ */
+export const testTextModel = async (settings?: TestSettingsOverride): Promise<ApiResponse<{ task_id: string; status: string }>> => {
+  const response = await apiClient.post<ApiResponse<{ task_id: string; status: string }>>('/api/settings/tests/text-model', settings || {});
+  return response.data;
+};
+
+/**
+ * 测试图片识别模型（异步）
+ * @param settings 可选的设置覆盖（未保存的设置）
+ * @returns 返回任务ID，需要通过 getTestStatus 轮询结果
+ */
+export const testCaptionModel = async (settings?: TestSettingsOverride): Promise<ApiResponse<{ task_id: string; status: string }>> => {
+  const response = await apiClient.post<ApiResponse<{ task_id: string; status: string }>>('/api/settings/tests/caption-model', settings || {});
+  return response.data;
+};
+
+/**
+ * 测试百度图像修复（异步）
+ * @param settings 可选的设置覆盖（未保存的设置）
+ * @returns 返回任务ID，需要通过 getTestStatus 轮询结果
+ */
+export const testBaiduInpaint = async (settings?: TestSettingsOverride): Promise<ApiResponse<{ task_id: string; status: string }>> => {
+  const response = await apiClient.post<ApiResponse<{ task_id: string; status: string }>>('/api/settings/tests/baidu-inpaint', settings || {});
+  return response.data;
+};
+
+/**
+ * 测试图像生成模型（异步）
+ * @param settings 可选的设置覆盖（未保存的设置）
+ * @returns 返回任务ID，需要通过 getTestStatus 轮询结果
+ */
+export const testImageModel = async (settings?: TestSettingsOverride): Promise<ApiResponse<{ task_id: string; status: string }>> => {
+  const response = await apiClient.post<ApiResponse<{ task_id: string; status: string }>>('/api/settings/tests/image-model', settings || {});
+  return response.data;
+};
+
+/**
+ * 测试 MinerU PDF 解析（异步）
+ * @param settings 可选的设置覆盖（未保存的设置）
+ * @returns 返回任务ID，需要通过 getTestStatus 轮询结果
+ */
+export const testMineruPdf = async (settings?: TestSettingsOverride): Promise<ApiResponse<{ task_id: string; status: string }>> => {
+  const response = await apiClient.post<ApiResponse<{ task_id: string; status: string }>>('/api/settings/tests/mineru-pdf', settings || {});
+  return response.data;
+};
+
+/**
+ * 查询测试任务状态
+ * @param taskId 任务ID
+ * @returns 任务状态信息
+ */
+export const getTestStatus = async (taskId: string): Promise<ApiResponse<{
+  status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+  result?: any;
+  error?: string;
+  message?: string;
+}>> => {
+  const response = await apiClient.get<ApiResponse<any>>(`/api/settings/tests/${taskId}/status`);
   return response.data;
 };

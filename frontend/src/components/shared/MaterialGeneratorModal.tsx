@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image as ImageIcon, ImagePlus, Upload, X, FolderOpen } from 'lucide-react';
-import { Modal, Textarea, Button, useToast, MaterialSelector, Skeleton } from '@/components/shared';
-import { generateMaterialImage, getTaskStatus } from '@/api/endpoints';
-import { getImageUrl } from '@/api/client';
+import { Modal } from './Modal';
+import { Textarea } from './Textarea';
+import { Button } from './Button';
+import { useToast } from './Toast';
+import { MaterialSelector } from './MaterialSelector';
 import { materialUrlToFile } from './materialUtils';
+import { Skeleton } from './Loading';
 import type { Material } from '@/api/endpoints';
 import type { Task } from '@/types';
 
@@ -33,6 +36,7 @@ export const MaterialGeneratorModal: React.FC<MaterialGeneratorModalProps> = ({
   const [extraImages, setExtraImages] = useState<File[]>([]);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
   const [isMaterialSelectorOpen, setIsMaterialSelectorOpen] = useState(false);
 
   const handleRefImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,6 +131,7 @@ export const MaterialGeneratorModal: React.FC<MaterialGeneratorModalProps> = ({
               ? t('components.materialGenerator.successProject', 'Material generated and saved to project library')
               : t('components.materialGenerator.successGlobal', 'Material generated and saved to global library');
             show({ message, type: 'success' });
+            setIsCompleted(true);
           } else {
             show({ message: t('components.materialGenerator.noImageUrl', 'Generation completed but no image URL found'), type: 'error' });
           }
@@ -240,7 +245,10 @@ export const MaterialGeneratorModal: React.FC<MaterialGeneratorModalProps> = ({
           label={t('components.materialGenerator.promptLabel')}
           placeholder={t('components.materialGenerator.promptPlaceholder')}
           value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
+          onChange={(e) => {
+            setPrompt(e.target.value);
+            if (isCompleted) setIsCompleted(false);
+          }}
           rows={3}
         />
 
@@ -341,9 +349,9 @@ export const MaterialGeneratorModal: React.FC<MaterialGeneratorModalProps> = ({
           <Button
             variant="primary"
             onClick={handleGenerate}
-            disabled={isGenerating || !prompt.trim()}
+            disabled={isGenerating || isCompleted || !prompt.trim()}
           >
-            {isGenerating ? t('components.materialGenerator.generating') : t('components.materialGenerator.generateButton')}
+            {isGenerating ? t('components.materialGenerator.generating') : isCompleted ? t('components.materialGenerator.completed', 'Completed') : t('components.materialGenerator.generateButton')}
           </Button>
         </div>
       </div>
